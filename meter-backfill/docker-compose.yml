@@ -1,0 +1,23 @@
+services:
+  backfill-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: meter-backfill-api:latest
+    container_name: meter-backfill-api
+    environment:
+      # SQLite 数据库路径，落在挂载卷中，容器重建不丢数据
+      BACKFILL_DB: /data/backfill.db
+    ports:
+      - "8000:8000"
+    volumes:
+      - backfill-data:/data
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/', timeout=3)"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
+
+volumes:
+  backfill-data:

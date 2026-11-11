@@ -1,0 +1,7 @@
+{
+  "meter_id": "MP-LINE-01",
+  "samples": [
+    {"ts": 1730000000, "meter_serial": "METER-A-0001", "count": 100000},
+    {"ts": 1730000720, "meter_serial": "METER-B-0002", "count": 180}
+  ]
+}
