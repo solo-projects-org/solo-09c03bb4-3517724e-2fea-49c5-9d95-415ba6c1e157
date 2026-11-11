@@ -1,0 +1,29 @@
+services:
+  meter:
+    build:
+      context: .
+      dockerfile: Dockerfile.sim
+    environment:
+      METER_PORT: "502"
+    ports:
+      - "1502:502"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import socket; s=socket.create_connection(('127.0.0.1', 502), 2); s.close()"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    environment:
+      METER_HOST: "meter"
+      METER_PORT: "502"
+      METER_SLAVE_ID: "1"
+      METER_TIMEOUT: "3"
+    ports:
+      - "8000:8000"
+    depends_on:
+      meter:
+        condition: service_healthy
